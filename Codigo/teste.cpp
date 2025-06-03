@@ -393,7 +393,10 @@ void datInsert(string name, int x)
 		while(!inputFile.eof())
 		{
 			inputFile.read((char*)&registro, sizeof(dado));
-			tempFile.write((char*)&registro, sizeof(dado));
+			if(!inputFile.eof())
+			{
+				tempFile.write((char*)&registro, sizeof(dado));
+			}
 		}
 		
 		tempFile.close();
@@ -470,7 +473,10 @@ void datInsert(string name, int x)
 		while(!tempFile.eof())
 		{
 			tempFile.read((char*)&registro, sizeof(dado));
-			inputFile.write((char*)&registro, sizeof(dado));
+			if(!inputFile.eof())
+			{
+				inputFile.write((char*)&registro, sizeof(dado));
+			}
 		}
 	}
 	else
