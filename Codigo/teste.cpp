@@ -1,8 +1,8 @@
-/*Membros da equipe (Grupo 20):
+/*Membros da equipe:
  * Alexandre de Castro Nunes Borges Filho
- * Ana Clara Moreira Viana
- * Maycon Henrique Soares de Sousa
-Tema: Guilda de Herois*/
+ * Leonardo Carvalho Silva
+ * Gustavo Figueiredo de Oliveira
+*/
 
 #include <iostream>
 #include <fstream>
@@ -19,10 +19,10 @@ using namespace std;
 struct dado
 {
 	char seriesReference[20];
-	char period[7];
+	char period[10];
 	double dataValue;
-	char status[7];
-	char units[7];
+	char status[10];
+	char units[10];
 	char magnitude;
 	char subject[50];
 	char group[100];
@@ -361,9 +361,244 @@ void datSwap(string name, int x, int y)
 	cin >> exit;
 }
 
+void datInsert(string name, int x)
+{
+	string tempFileName = "temp.dat";
+    int size = sizeof(dado);
+    
+    ofstream criar(tempFileName);
+    criar.close();
+
+    fstream inputFile;
+    fstream tempFile;
+    
+    inputFile.open(name, ios::in | ios::out | ios::binary);
+    tempFile.open(tempFileName, ios::in | ios::out | ios::binary);
+
+	int xPos = size * x;
+	
+	ifstream fileSize(name, ios::binary | ios::ate);
+	
+	size = fileSize.tellg() / size;
+	fileSize.close();
+	
+	dado registro;
+
+	if (inputFile.is_open() &&( x < size && x >= 0) && tempFile.is_open())
+	{
+		string temp;
+		
+		inputFile.seekg(xPos, ios::beg);
+		
+		while(!inputFile.eof())
+		{
+			inputFile.read((char*)&registro, sizeof(dado));
+			tempFile.write((char*)&registro, sizeof(dado));
+		}
+		
+		tempFile.close();
+		inputFile.close();
+		
+		tempFile.open(tempFileName, ios::in | ios::out | ios::binary);
+		inputFile.open(name, ios::in | ios::out | ios::binary);
+		
+		inputFile.seekg(xPos, ios::beg);
+		
+		cout << "======================================" << endl;
+		cout << "          INICIO DA INSERCAO          " << endl;
+		cout << "======================================" << endl;
+		cout << "Series Reference:  ";
+		cin.ignore();
+		getline(cin, temp);
+		strcpy(registro.seriesReference, temp.c_str());
+		
+		cout << "Period:            ";
+		getline(cin, temp);
+		strcpy(registro.period, temp.c_str());
+		
+		cout << "Data Value:        ";
+		getline(cin, temp);
+		if(temp != ""){
+			registro.dataValue = stod(temp);
+		} else
+		{
+			registro.dataValue = 0;
+		}
+		
+		cout << "Status:            ";
+		getline(cin, temp);
+		strcpy(registro.status, temp.c_str());
+		
+		cout << "Units:             ";
+		getline(cin, temp);
+		strcpy(registro.units, temp.c_str());
+		
+		cout << "Magnitude:         ";
+		cin >> registro.magnitude;
+		
+		cout << "Subject:           ";
+		cin.ignore();
+		getline(cin, temp);
+		strcpy(registro.subject, temp.c_str());
+		
+		cout << "Group:             ";
+		getline(cin, temp);
+		strcpy(registro.group, temp.c_str());
+		
+		cout << "Series 1:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle1, temp.c_str());
+		
+		cout << "Series 2:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle2, temp.c_str());
+		
+		cout << "Series 3:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle3, temp.c_str());
+		
+		cout << "Series 4:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle4, temp.c_str());
+		
+		cout << "Series 5:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle5, temp.c_str());
+		
+		inputFile.write((char*)&registro, sizeof(dado));
+		
+		while(!tempFile.eof())
+		{
+			tempFile.read((char*)&registro, sizeof(dado));
+			inputFile.write((char*)&registro, sizeof(dado));
+		}
+	}
+	else
+	{
+		cout << "Nao foi possivel abrir o arquivo .DAT" << endl;
+		cout << "Ou a posicao e invalida." << endl;
+	}
+
+	inputFile.close();
+	tempFile.close();
+	remove(tempFileName.c_str());
+	
+	string exit;
+	
+	cout << "======================================" << endl;
+	cout << "           FIM DA INSERCAO            " << endl;
+	cout << "======================================" << endl;
+	cout << "| Digite qualquer valor para sair.   |" << endl;
+	cout << "--------------------------------------" << endl;
+	
+	cin >> exit;
+}
+
 void datChange(string name, int x)
 {
+	fstream r;
+	r.open(name, ios::in | ios::out | ios::binary);
 	
+	int size = sizeof(dado);
+	int xPos = size * x;
+
+	ifstream fileSize(name, ios::binary | ios::ate);
+	
+	size = fileSize.tellg() / size;
+	fileSize.close();
+	
+	dado registro;
+
+	if (r.is_open() &&( x < size && x >= 0))
+	{
+		string temp;
+		r.seekg(xPos, ios::beg);
+		r.read((char*)&registro, sizeof(dado));
+		cout << "REGISTRO X: " << endl;
+		printDado(registro);
+		
+		cout << "======================================" << endl;
+		cout << "          INICIO DA MUDANCA           " << endl;
+		cout << "======================================" << endl;
+		cout << "Series Reference:  ";
+		cin.ignore();
+		getline(cin, temp);
+		strcpy(registro.seriesReference, temp.c_str());
+		
+		cout << "Period:            ";
+		getline(cin, temp);
+		strcpy(registro.period, temp.c_str());
+		
+		cout << "Data Value:        ";
+		getline(cin, temp);
+		if(temp != ""){
+			registro.dataValue = stod(temp);
+		} else
+		{
+			registro.dataValue = 0;
+		}
+		
+		cout << "Status:            ";
+		getline(cin, temp);
+		strcpy(registro.status, temp.c_str());
+		
+		cout << "Units:             ";
+		getline(cin, temp);
+		strcpy(registro.units, temp.c_str());
+		
+		cout << "Magnitude:         ";
+		cin >> registro.magnitude;
+		
+		cout << "Subject:           ";
+		cin.ignore();
+		getline(cin, temp);
+		strcpy(registro.subject, temp.c_str());
+		
+		cout << "Group:             ";
+		getline(cin, temp);
+		strcpy(registro.group, temp.c_str());
+		
+		cout << "Series 1:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle1, temp.c_str());
+		
+		cout << "Series 2:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle2, temp.c_str());
+		
+		cout << "Series 3:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle3, temp.c_str());
+		
+		cout << "Series 4:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle4, temp.c_str());
+		
+		cout << "Series 5:          ";
+		getline(cin, temp);
+		strcpy(registro.seriesTitle5, temp.c_str());
+		
+		r.seekg(xPos, ios::beg);
+		r.write((char*)&registro, sizeof(dado));
+
+	}
+	else
+	{
+		cout << "Nao foi possivel abrir o arquivo .DAT" << endl;
+		cout << "Ou a posicao e invalida." << endl;
+	}
+
+	r.close();
+	
+	string exit;
+	
+	cout << "======================================" << endl;
+	cout << "            FIM DA MUDANCA            " << endl;
+	cout << "======================================" << endl;
+	cout << "| Digite qualquer valor para sair.   |" << endl;
+	cout << "--------------------------------------" << endl;
+	
+	cin >> exit;
 }
 
 // Leitura de Arquivos
@@ -498,6 +733,8 @@ void telaMain()
 		cin >> indexX;
 
 		system("cls||clear");
+		
+		datInsert("registro.dat", indexX);
 
 		break;
 	case 2:
