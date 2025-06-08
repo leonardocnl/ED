@@ -688,7 +688,8 @@ void polyphaseMerge(string arquivo_entrada, string arquivo_saida, int tamanho_me
             long long dummy_runs_produced_this_phase = 0;
 
             for (long long i = 0; i < runs_to_merge_this_pass; ++i) {
-                cout << "Intercalando run " << i + 1 << " de " << runs_to_merge_this_pass << endl;
+				//Se o tamanho do buffer for 1, será muitos prints para a intercalação
+                //cout << "Intercalando run " << i + 1 << " de " << runs_to_merge_this_pass << endl;
 
                 bool this_output_run_is_actual = false;
 
@@ -1719,7 +1720,7 @@ void telaMain(string &arquivoDat)
 	cout << "--------------------------------------" << endl;
 	cout << "| 4. Trocar Posicao de Registro      |" << endl;
 	cout << "--------------------------------------" << endl;
-	cout << "| 5. Imprimir Registro Completo      |" << endl;
+	cout << "| 5. Imprimir Todos os Registros     |" << endl;
 	cout << "--------------------------------------" << endl;
 	cout << "| 6. Intercalacao Polifasica         |" << endl;
 	cout << "--------------------------------------" << endl;
